@@ -54,11 +54,17 @@ abstract class Classifier {
       _inputType = interpreter.getInputTensor(0).type;
       _outputType = interpreter.getOutputTensor(0).type;
 
+      debugPrint("Input shape: $_inputShape");
+      debugPrint("Output shape: $_outputShape");
+      debugPrint("Input type: $_inputType");
+      debugPrint("Output type: $_outputType");
+
       _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
       _probabilityProcessor =
           TensorProcessorBuilder().add(postProcessNormalizeOp).build();
     } catch (e) {
-      debugPrint('Unable to create interpreter, Caught Exception: ${e.toString()}');
+      debugPrint(
+          'Unable to create interpreter, Caught Exception: ${e.toString()}');
     }
   }
 
@@ -92,7 +98,7 @@ abstract class Classifier {
     debugPrint('Time to load image: $pre ms');
 
     final runs = DateTime.now().millisecondsSinceEpoch;
-    interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
+    interpreter.run(_inputImage.buffer.asFloat32List(), _outputBuffer.getBuffer());
     final run = DateTime.now().millisecondsSinceEpoch - runs;
 
     debugPrint('Time to run inference: $run ms');

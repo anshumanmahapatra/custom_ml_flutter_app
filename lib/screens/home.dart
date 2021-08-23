@@ -32,7 +32,9 @@ class _HomeState extends State<Home> {
 
   Future pickImage(ImageSource source) async {
     try {
-      final pickedFile = await ImagePicker().pickImage(source: source).whenComplete(() => Navigator.pop(context));
+      final pickedFile = await ImagePicker()
+          .pickImage(source: source)
+          .whenComplete(() => Navigator.pop(context));
 
       setState(() {
         loading = true;
@@ -46,15 +48,18 @@ class _HomeState extends State<Home> {
 
   void _predict() async {
     try {
+      // setState(() {
+      //   category = null;
+      // });
       img.Image imageInput = img.decodeImage(_image!.readAsBytesSync())!;
       Category pred = _classifier.predict(imageInput);
-      
+
       setState(() {
         loading = false;
         category = pred;
       });
     } on Exception catch (e) {
-       debugPrint(" The error while classifying image is: ${e.toString()}");
+      debugPrint(" The error while classifying image is: ${e.toString()}");
     }
   }
 
